@@ -38,11 +38,11 @@ variable "PUBLIC_SUBNET_CIDR_BLOCKSCOGNITO_DOMAIN" {
   type        = string
   default     = "api_COGNITO_DOMAIN"
 }
-
+/*
 variable "PUBLIC_SUBNET_CIDR_BLOCKSAUTH_URL" {
   type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/oauth2/authorize"
-}
+  default     = "https://${var.COGNITO_DOMAIN}/oauth2/authorize"
+} */
 
 // Providers
 provider "aws" {
