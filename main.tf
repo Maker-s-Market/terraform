@@ -1,5 +1,5 @@
 module "aws_ecs" {
-    source = "./aws_ecs"
+    source = "./aws_ECS"
 }
 
 /*
