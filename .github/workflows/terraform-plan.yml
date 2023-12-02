@@ -1,0 +1,47 @@
+name: 'Terraform Plan'
+
+on:
+  pull_request:
+    branches: [ "dev" ]
+
+env:
+  TF_CLOUD_ORGANIZATION: "makers-market"
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_WORKSPACE: "makers-market"
+  MYSQL_ROOT_PASSWORD: "${{ secrets.MYSQL_ROOT_PASSWORD }}"
+  MYSQL_DATABASE: "${{ secrets.MYSQL_DATABASE }}"
+  MYSQL_USER: "${{ secrets.MYSQL_USER }}"
+  MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+  MYSQL_HOST: "${{ secrets.MYSQL_HOST }}"
+  AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+  AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+  USER_POOL_ID: "${{ secrets.USER_POOL_ID }}"
+  COGNITO_DOMAIN: "${{ secrets.COGNITO_DOMAIN }}"
+  COGNITO_USER_CLIENT_ID: "${{ secrets.COGNITO_USER_CLIENT_ID }}"
+  AUTH_URL: "${{ secrets.AUTH_URL }}"
+  TOKEN_URL: "${{ secrets.TOKEN_URL }}"
+  LOGOUT_URL: "${{ secrets.LOGOUT_URL }}"
+  CONFIG_DIRECTORY: "./"
+
+jobs:
+  terraform:
+    if: github.repository != 'Maker-s-Market/deployment'
+    name: "Terraform Plan"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure Terraform CLI
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Initialize Terraform
+        run: terraform init -input=false -backend-config="organization=${{ env.TF_CLOUD_ORGANIZATION }}" -backend-config="workspaces=${{ env.TF_WORKSPACE }}"
+
+      - name: Terraform Plan
+        run: terraform plan -var="MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" -var="LOGOUT_URL=${{ secrets.LOGOUT_URL }}" -var="TOKEN_URL=${{ secrets.TOKEN_URL }}" -var="AUTH_URL=${{ secrets.AUTH_URL }}" -var="COGNITO_USER_CLIENT_ID=${{ secrets.COGNITO_USER_CLIENT_ID }}" -var="COGNITO_DOMAIN=${{ secrets.COGNITO_DOMAIN }}" -var="USER_POOL_ID=${{ secrets.USER_POOL_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="MYSQL_HOST=${{ secrets.MYSQL_HOST }}" -var="MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" -var="MYSQL_USER=${{ secrets.MYSQL_USER }}" -var="MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}"  -out=tfplan

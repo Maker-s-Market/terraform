@@ -11,77 +11,37 @@ terraform {
 variable "aws_region" {
   type        = string
   description = "The region in which the resources will be created"
-  default     = "us-east-1"
+  default     = "us-erast-1"
 }
 
-variable "api_MYSQL_ROOT_PASSWORD" {
-  type        = string
-  default     = "MYSQL_ROOT_PASSWORD"
-}
-
-variable "api_MYSQL_DATABASE" {
-  type        = string
-  default     = "MYSQL_DATABASE"
-}
-
-variable "api_MYSQL_USER" {
-  type        = string
-  default     = "MYSQL_USER"
-}
-
-variable "api_MYSQL_PASSWORD" {
-  type        = string
-  default     = "MYSQL_PASSWORD"
-}
-
-variable "api_MYSQL_HOST" {
-  type        = string
-  default     = "MYSQL_HOST"
-}
-
-variable "api_AWS_ACCESS_KEY_ID"{
-  type        = string
-  default     = "api_AWS_ACCESS_KEY_ID"
-}
-
-variable "api_AWS_SECRET_ACCESS_KEY" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSAWS_SECRET_ACCESS_KEY" {
   type        = string
   default     = "api_AWS_SECRET_ACCESS_KEY"
 }
 
-variable "api_BUCKET_NAME" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSBUCKET_NAME" {
   type        = string
   default     = "api_BUCKET_NAME"
 }
 
-variable "api_USER_POOL_ID" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSUSER_POOL_ID" {
   type        = string
   default     = "api_USER_POOL_ID"
 }
 
-variable "api_COGNITO_USER_CLIENT_ID" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSCOGNITO_USER_CLIENT_ID" {
   type        = string
   default     = "api_COGNITO_USER_CLIENT_ID"
 }
 
-variable "api_COGNITO_DOMAIN" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSCOGNITO_DOMAIN" {
   type        = string
   default     = "api_COGNITO_DOMAIN"
 }
 
-variable "api_AUTH_URL" {
+variable "PUBLIC_SUBNET_CIDR_BLOCKSAUTH_URL" {
   type        = string
   default     = "https://${var.api_COGNITO_DOMAIN}/oauth2/authorize"
-}
-
-variable "api_TOKEN_URL" {
-  type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/oauth2/token"
-}
-
-variable "api_LOGOUT_URL" {
-  type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/logout"
 }
 
 // Providers
@@ -158,23 +118,23 @@ resource "aws_ecs_task_definition" "api_task" {
         },
         {
         "name": "MYSQL_ROOT_PASSWORD",
-        "value": var.api_MYSQL_ROOT_PASSWORD
+        "value": var.MYSQL_ROOT_PASSWORD
         },
         {
           "name": "MYSQL_DATABASE",
-          "value": var.api_MYSQL_DATABASE
+          "value": var.MYSQL_DATABASE
         },
         {
           "name": "MYSQL_USER",
-          "value": var.api_MYSQL_USER
+          "value": var.MYSQL_USER
         },
         {
           "name": "MYSQL_PASSWORD",
-          "value": var.api_MYSQL_PASSWORD
+          "value": var.MYSQL_PASSWORD
         },
         {
           "name": "MYSQL_HOST",
-          "value": var.api_MYSQL_HOST
+          "value": var.MYSQL_HOST
         },
         {
           "name": "AWS_REGION",
@@ -182,39 +142,39 @@ resource "aws_ecs_task_definition" "api_task" {
         },
         {
           "name": "AWS_ACCESS_KEY_ID",
-          "value": var.api_AWS_ACCESS_KEY_ID
+          "value": var.AWS_ACCESS_KEY_ID
         },
         {
           "name": "AWS_SECRET_ACCESS_KEY",
-          "value": var.api_AWS_SECRET_ACCESS_KEY
+          "value": var.AWS_SECRET_ACCESS_KEY
         },
         {
           "name": "BUCKET_NAME",
-          "value": var.api_BUCKET_NAME
+          "value": var.BUCKET_NAME
         },
         {
           "name": "USER_POOL_ID",
-          "value": var.api_USER_POOL_ID
+          "value": var.USER_POOL_ID
         },
         {
           "name": "COGNITO_USER_CLIENT_ID",
-          "value": var.api_COGNITO_USER_CLIENT_ID
+          "value": var.COGNITO_USER_CLIENT_ID
         },
         {
           "name": "COGNITO_DOMAIN",
-          "value": var.api_COGNITO_DOMAIN
+          "value": var.COGNITO_DOMAIN
         },
         {
           "name": "AUTH_URL",
-          "value": var.api_AUTH_URL
+          "value": var.AUTH_URL
         },
         {
           "name": "TOKEN_URL",
-          "value": var.api_TOKEN_URL
+          "value": var.TOKEN_URL
         },
         {
           "name": "LOGOUT_URL",
-          "value": var.api_LOGOUT_URL
+          "value": var.LOGOUT_URL
         }
       ]
     }
