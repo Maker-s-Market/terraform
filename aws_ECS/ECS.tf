@@ -11,7 +11,7 @@ terraform {
 variable "aws_region" {
   type        = string
   description = "The region in which the resources will be created"
-  default     = "us-erast-1"
+  default     = "us-east-1"
 }
 
 variable "MYSQL_ROOT_PASSWORD" {
