@@ -14,35 +14,75 @@ variable "aws_region" {
   default     = "us-erast-1"
 }
 
-variable "PUBLIC_SUBNET_CIDR_BLOCKSAWS_SECRET_ACCESS_KEY" {
+variable "MYSQL_ROOT_PASSWORD" {
   type        = string
-  default     = "api_AWS_SECRET_ACCESS_KEY"
+  default     = "MYSQL_ROOT_PASSWORD"
 }
 
-variable "PUBLIC_SUBNET_CIDR_BLOCKSBUCKET_NAME" {
+variable "MYSQL_DATABASE" {
   type        = string
-  default     = "api_BUCKET_NAME"
+  default     = "MYSQL_DATABASE"
 }
 
-variable "PUBLIC_SUBNET_CIDR_BLOCKSUSER_POOL_ID" {
+variable "MYSQL_USER" {
   type        = string
-  default     = "api_USER_POOL_ID"
+  default     = "MYSQL_USER"
 }
 
-variable "PUBLIC_SUBNET_CIDR_BLOCKSCOGNITO_USER_CLIENT_ID" {
+variable "MYSQL_PASSWORD" {
   type        = string
-  default     = "api_COGNITO_USER_CLIENT_ID"
+  default     = "MYSQL_PASSWORD"
 }
 
-variable "PUBLIC_SUBNET_CIDR_BLOCKSCOGNITO_DOMAIN" {
+variable "MYSQL_HOST" {
   type        = string
-  default     = "api_COGNITO_DOMAIN"
+  default     = "MYSQL_HOST"
 }
-/*
-variable "PUBLIC_SUBNET_CIDR_BLOCKSAUTH_URL" {
+
+variable "AWS_ACCESS_KEY_ID"{
   type        = string
-  default     = "https://${var.COGNITO_DOMAIN}/oauth2/authorize"
-} */
+  default     = "AWS_ACCESS_KEY_ID"
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  type        = string
+  default     = "AWS_SECRET_ACCESS_KEY"
+}
+
+variable "BUCKET_NAME" {
+  type        = string
+  default     = "BUCKET_NAME"
+}
+
+variable "USER_POOL_ID" {
+  type        = string
+  default     = "USER_POOL_ID"
+}
+
+variable "COGNITO_USER_CLIENT_ID" {
+  type        = string
+  default     = "COGNITO_USER_CLIENT_ID"
+}
+
+variable "COGNITO_DOMAIN" {
+  type        = string
+  default     = "COGNITO_DOMAIN"
+}
+
+variable "AUTH_URL" {
+  type        = string
+  default     = "https://COGNITO_DOMAIN/oauth2/authorize"
+}
+
+variable "TOKEN_URL" {
+  type        = string
+  default     = "https://COGNITO_DOMAIN/oauth2/token"
+}
+
+variable "LOGOUT_URL" {
+  type        = string
+  default     = "https://COGNITO_DOMAIN/logout"
+}
 
 // Providers
 provider "aws" {
