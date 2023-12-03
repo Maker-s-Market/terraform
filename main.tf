@@ -88,3 +88,16 @@ variable "LOGOUT_URL" {
   type        = string
   default     = "https://COGNITO_DOMAIN/logout"
 }
+
+// Variables
+variable "aws_region" {
+  type        = string
+  description = "The region in which the resources will be created"
+  default     = "us-erast-1"
+}
+
+// Providers
+provider "aws" {
+  region  = var.aws_region
+  profile = "makers3"
+}
