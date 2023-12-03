@@ -37,6 +37,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: install-aws-cli-action
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: AWS Configuration
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile makers3
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile makers3
+
       - name: Configure Terraform CLI
         uses: hashicorp/setup-terraform@v1
         with:
