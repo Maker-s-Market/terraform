@@ -21,6 +21,16 @@ env:
   AUTH_URL: "${{ secrets.AUTH_URL }}"
   TOKEN_URL: "${{ secrets.TOKEN_URL }}"
   LOGOUT_URL: "${{ secrets.LOGOUT_URL }}"
+  BUCKET_NAME: "${{ secrets.BUCKET_NAME }}"
+  SSL_CERTIFICATE_ARN: "${{ secrets.SSL_CERTIFICATE_ARN }}"
+  STRIPE_KEY: "${{ secrets.STRIPE_KEY }}"
+  PUBLIC_SUBNET_1: "${{ secrets.PUBLIC_SUBNET_1 }}"
+  PUBLIC_SUBNET_2: "${{ secrets.PUBLIC_SUBNET_2 }}"
+  VPC_ID: "${{ secrets.VPC_ID }}"
+  FRONTEND_SIGN_UP_IDP_LINK: "${{ secrets.FRONTEND_SIGN_UP_IDP_LINK }}"
+  MAKERS_URL_API: "${{ secrets.MAKERS_URL_API }}"
+  VITE_GOOGLE_AUTH_URL: "${{ secrets.VITE_GOOGLE_AUTH_URL }}"
+  VITE_STRIPE_KEY: "${{ secrets.VITE_STRIPE_KEY }}"
   CONFIG_DIRECTORY: "./"
 
 jobs:
@@ -40,8 +50,8 @@ jobs:
 
       - name: AWS Configuration
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile makers3
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile makers3
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile makers5
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile makers5
 
       - name: Configure Terraform CLI
         uses: hashicorp/setup-terraform@v1
@@ -52,7 +62,7 @@ jobs:
         run: terraform init -input=false -backend-config="organization=${{ env.TF_CLOUD_ORGANIZATION }}" -backend-config="workspaces=${{ env.TF_WORKSPACE }}"
 
       - name: Terraform Plan
-        run: terraform plan -var="MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" -var="LOGOUT_URL=${{ secrets.LOGOUT_URL }}" -var="TOKEN_URL=${{ secrets.TOKEN_URL }}" -var="AUTH_URL=${{ secrets.AUTH_URL }}" -var="COGNITO_USER_CLIENT_ID=${{ secrets.COGNITO_USER_CLIENT_ID }}" -var="COGNITO_DOMAIN=${{ secrets.COGNITO_DOMAIN }}" -var="USER_POOL_ID=${{ secrets.USER_POOL_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="MYSQL_HOST=${{ secrets.MYSQL_HOST }}" -var="MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" -var="MYSQL_USER=${{ secrets.MYSQL_USER }}" -var="MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}"  -out=tfplan
+        run: terraform plan -var="MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" -var="LOGOUT_URL=${{ secrets.LOGOUT_URL }}" -var="TOKEN_URL=${{ secrets.TOKEN_URL }}" -var="AUTH_URL=${{ secrets.AUTH_URL }}" -var="COGNITO_USER_CLIENT_ID=${{ secrets.COGNITO_USER_CLIENT_ID }}" -var="COGNITO_DOMAIN=${{ secrets.COGNITO_DOMAIN }}" -var="USER_POOL_ID=${{ secrets.USER_POOL_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="MYSQL_HOST=${{ secrets.MYSQL_HOST }}" -var="MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" -var="MYSQL_USER=${{ secrets.MYSQL_USER }}" -var="MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" -var="BUCKET_NAME=${{ secrets.BUCKET_NAME }}" -var="SSL_CERTIFICATE_ARN=${{ secrets.SSL_CERTIFICATE_ARN }}" -var="STRIPE_KEY=${{ secrets.STRIPE_KEY }}" -var="PUBLIC_SUBNET_1=${{ secrets.PUBLIC_SUBNET_1 }}" -var="PUBLIC_SUBNET_2=${{ secrets.PUBLIC_SUBNET_2 }}" -var="VPC_ID=${{ secrets.VPC_ID }}" -var="FRONTEND_SIGN_UP_IDP_LINK=${{ secrets.FRONTEND_SIGN_UP_IDP_LINK }}" -var="MAKERS_URL_API=${{ secrets.MAKERS_URL_API }}" -var="VITE_GOOGLE_AUTH_URL=${{ secrets.VITE_GOOGLE_AUTH_URL }}" -var="VITE_STRIPE_KEY=${{ secrets.VITE_STRIPE_KEY }}" -out=tfplan
 
       - name: Terraform Apply
-        run: terraform apply -var="MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" -var="LOGOUT_URL=${{ secrets.LOGOUT_URL }}" -var="TOKEN_URL=${{ secrets.TOKEN_URL }}" -var="AUTH_URL=${{ secrets.AUTH_URL }}" -var="COGNITO_USER_CLIENT_ID=${{ secrets.COGNITO_USER_CLIENT_ID }}" -var="COGNITO_DOMAIN=${{ secrets.COGNITO_DOMAIN }}" -var="USER_POOL_ID=${{ secrets.USER_POOL_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="MYSQL_HOST=${{ secrets.MYSQL_HOST }}" -var="MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" -var="MYSQL_USER=${{ secrets.MYSQL_USER }}" -var="MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}"
+        run: terraform apply -var="MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" -var="LOGOUT_URL=${{ secrets.LOGOUT_URL }}" -var="TOKEN_URL=${{ secrets.TOKEN_URL }}" -var="AUTH_URL=${{ secrets.AUTH_URL }}" -var="COGNITO_USER_CLIENT_ID=${{ secrets.COGNITO_USER_CLIENT_ID }}" -var="COGNITO_DOMAIN=${{ secrets.COGNITO_DOMAIN }}" -var="USER_POOL_ID=${{ secrets.USER_POOL_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="MYSQL_HOST=${{ secrets.MYSQL_HOST }}" -var="MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" -var="MYSQL_USER=${{ secrets.MYSQL_USER }}" -var="MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" -var="BUCKET_NAME=${{ secrets.BUCKET_NAME }}" -var="SSL_CERTIFICATE_ARN=${{ secrets.SSL_CERTIFICATE_ARN }}" -var="STRIPE_KEY=${{ secrets.STRIPE_KEY }}" -var="PUBLIC_SUBNET_1=${{ secrets.PUBLIC_SUBNET_1 }}" -var="PUBLIC_SUBNET_2=${{ secrets.PUBLIC_SUBNET_2 }}" -var="VPC_ID=${{ secrets.VPC_ID }}" -var="FRONTEND_SIGN_UP_IDP_LINK=${{ secrets.FRONTEND_SIGN_UP_IDP_LINK }}" -var="MAKERS_URL_API=${{ secrets.MAKERS_URL_API }}" -var="VITE_GOOGLE_AUTH_URL=${{ secrets.VITE_GOOGLE_AUTH_URL }}" -var="VITE_STRIPE_KEY=${{ secrets.VITE_STRIPE_KEY }}"
