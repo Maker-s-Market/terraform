@@ -119,24 +119,24 @@ variable "VITE_GOOGLE_AUTH_URL"{
   default    = "VITE_GOOGLE_AUTH_URL"
 }
 
-variable "ssl_certificate_arn" {
+variable "SSL_CERTIFICATE_ARN" {
   type        = string
-  default     = "ssl_certificate_arn"
+  default     = "SSL_CERTIFICATE_ARN"
 }
 
-variable "vpc_id" {
+variable "VPC_ID" {
   type    = string
-  default = "vpc_id"
+  default = "VPC_ID"
 }
 
-variable "public_subnet_1" {
+variable "PUBLIC_SUBNET_1" {
   type    = string
-  default = "public_subnet_1"
+  default = "PUBLIC_SUBNET_1"
 }
 
-variable "public_subnet_2" {
+variable "PUBLIC_SUBNET_2" {
   type    = string
-  default = "public_subnet_2"
+  default = "PUBLIC_SUBNET_2"
 }
 
 // Providers
@@ -367,13 +367,13 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 resource "aws_alb" "application_load_balancer" {
   name               = "load-balancer-prod" #load balancer name
   load_balancer_type = "application"
-  subnets            = [var.public_subnet_1, var.public_subnet_2]
+  subnets            = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
   # security group
   security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
-  vpc_id = var.vpc_id
+  vpc_id = var.VPC_ID
   ingress {
     from_port   = 80
     to_port     = 80
@@ -401,7 +401,7 @@ resource "aws_lb_target_group" "api_target_group" {
   port        = 8000 # Update to match FastAPI port
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id = var.vpc_id
+  vpc_id = var.VPC_ID
 
   health_check {
     enabled             = true
@@ -421,7 +421,7 @@ resource "aws_lb_target_group" "frontend_target_group" {
   port        = 4173
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id = var.vpc_id
+  vpc_id = var.VPC_ID
 
   health_check {
     enabled             = true
@@ -455,7 +455,7 @@ resource "aws_lb_listener" "https_listener" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08" # Default policy, adjust as needed
-  certificate_arn   = var.ssl_certificate_arn
+  certificate_arn   = var.SSL_CERTIFICATE_ARN
 
   default_action {
     type = "fixed-response"
@@ -513,7 +513,7 @@ resource "aws_ecs_service" "api_service" {
   }
 
   network_configuration {
-    subnets          = [var.public_subnet_1, var.public_subnet_2]
+    subnets          = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
     assign_public_ip = true     # Provide the containers with public IPs
     security_groups  = ["${aws_security_group.service_security_group.id}"] # Set up the security group
   }
@@ -533,14 +533,14 @@ resource "aws_ecs_service" "frontend_service" {
   }
 
   network_configuration {
-    subnets          = [var.public_subnet_1, var.public_subnet_2]
+    subnets          = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
     assign_public_ip = true
     security_groups  = [aws_security_group.service_security_group.id]
   }
 }
 
 resource "aws_security_group" "service_security_group" {
-  vpc_id = var.vpc_id
+  vpc_id = var.VPC_ID
   ingress {
     from_port = 0
     to_port   = 0
