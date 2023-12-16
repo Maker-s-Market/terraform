@@ -35,7 +35,7 @@ variable "public_subnet_cidr_blocks" {
 // Providers
 provider "aws" {
   region  = var.aws_region
-  profile = "terraform-user"
+  profile = "makers5"
 }
 
 // VPC
@@ -77,17 +77,14 @@ resource "aws_internet_gateway" "makers_igw" {
 
 // NAT Gateway
 resource "aws_nat_gateway" "makers_nat" {
-  count               = length(var.public_subnet_cidr_blocks)
-  subnet_id           = aws_subnet.public_subnets[count.index].id
-  allocation_id       = aws_eip.nat_eip[count.index].id
+  subnet_id      = aws_subnet.public_subnets[0].id
+  allocation_id  = aws_eip.nat_eip.id
   tags = {
-    Name = "makers-nat${count.index + 1}"
+    Name = "makers-nat"
   }
 }
 
-resource "aws_eip" "nat_eip" {
-  count = length(var.public_subnet_cidr_blocks)
-}
+resource "aws_eip" "nat_eip" {}
 
 // Route Tables
 resource "aws_route_table" "public_route_table" {
@@ -95,6 +92,12 @@ resource "aws_route_table" "public_route_table" {
   tags = {
     Name = "makers-public-rt"
   }
+}
+
+resource "aws_route" "public_route" {
+  route_table_id         = aws_route_table.public_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.makers_igw.id
 }
 
 resource "aws_route_table_association" "public_subnet_association" {
@@ -111,8 +114,17 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_route" "private_route" {
-  count              = length(var.private_subnet_cidr_blocks)
-  route_table_id     = aws_route_table.private_route_table.id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id     = aws_nat_gateway.makers_nat[count.index].id
+  route_table_id            = aws_route_table.private_route_table.id
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id            = aws_nat_gateway.makers_nat.id
+}
+
+resource "aws_route_table_association" "private_subnet_association" {
+  count          = length(var.private_subnet_cidr_blocks)
+  subnet_id      = aws_subnet.private_subnets[count.index].id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+output "makers_vpc_id" {
+  value = aws_vpc.makers.id
 }

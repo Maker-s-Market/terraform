@@ -41,11 +41,11 @@ variable "google_provider_client_secret" {
 // Providers
 provider "aws" {
   region  = var.aws_region
-  profile = "makers3"
+  profile = "makers5"
 }
 
 resource "aws_cognito_user_pool" "maker_test_pool" {
-  name = "Test-pool"
+  name = "Makers-pool"
 
   deletion_protection = "ACTIVE"
 
@@ -93,7 +93,7 @@ resource "aws_cognito_user_pool" "maker_test_pool" {
 }
 
 resource "aws_cognito_user_pool_domain" "makers_test_domain" {
-  domain       = "domain-makers-test"
+  domain       = "domain-makers-market"
   user_pool_id = aws_cognito_user_pool.maker_test_pool.id
 }
 
@@ -132,7 +132,7 @@ resource "aws_cognito_identity_provider" "facebook_provider"{
 }
 
 resource "aws_cognito_user_pool_client" "makers_test_client" {
-  name = "Test-client"
+  name = "Makers-user-pool"
   user_pool_id = aws_cognito_user_pool.maker_test_pool.id
   generate_secret = false
 
@@ -148,3 +148,18 @@ resource "aws_cognito_user_pool_client" "makers_test_client" {
 }
 
 # Note: Facebook and Google as identity providers require additional AWS Console configuration
+
+#Output USER_POOL_ID
+output "user_pool_id" {
+  value = aws_cognito_user_pool.maker_test_pool.id
+}
+
+#Output USER_POOL_CLIENT_ID
+output "user_pool_client_id" {
+  value = aws_cognito_user_pool_client.makers_test_client.id
+}
+
+#Output Cognito Domain
+output "cognito_domain" {
+  value = aws_cognito_user_pool_domain.makers_test_domain.domain
+}
