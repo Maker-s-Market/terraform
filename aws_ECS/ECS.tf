@@ -14,80 +14,135 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "api_MYSQL_ROOT_PASSWORD" {
+variable "MYSQL_ROOT_PASSWORD" {
   type        = string
   default     = "MYSQL_ROOT_PASSWORD"
 }
 
-variable "api_MYSQL_DATABASE" {
+variable "MYSQL_DATABASE" {
   type        = string
   default     = "MYSQL_DATABASE"
 }
 
-variable "api_MYSQL_USER" {
+variable "MYSQL_USER" {
   type        = string
   default     = "MYSQL_USER"
 }
 
-variable "api_MYSQL_PASSWORD" {
+variable "MYSQL_PASSWORD" {
   type        = string
   default     = "MYSQL_PASSWORD"
 }
 
-variable "api_MYSQL_HOST" {
+variable "MYSQL_SG" {
+  type        = string
+  default     = "MYSQL_SG"
+}
+
+variable "MYSQL_HOST" {
   type        = string
   default     = "MYSQL_HOST"
 }
 
-variable "api_AWS_ACCESS_KEY_ID"{
+variable "AWS_ACCESS_KEY_ID"{
   type        = string
-  default     = "api_AWS_ACCESS_KEY_ID"
+  default     = "AWS_ACCESS_KEY_ID"
 }
 
-variable "api_AWS_SECRET_ACCESS_KEY" {
+variable "AWS_SECRET_ACCESS_KEY" {
   type        = string
-  default     = "api_AWS_SECRET_ACCESS_KEY"
+  default     = "AWS_SECRET_ACCESS_KEY"
 }
 
-variable "api_BUCKET_NAME" {
+variable "BUCKET_NAME" {
   type        = string
-  default     = "api_BUCKET_NAME"
+  default     = "BUCKET_NAME"
 }
 
-variable "api_USER_POOL_ID" {
+variable "USER_POOL_ID" {
   type        = string
-  default     = "api_USER_POOL_ID"
+  default     = "USER_POOL_ID"
 }
 
-variable "api_COGNITO_USER_CLIENT_ID" {
+variable "COGNITO_USER_CLIENT_ID" {
   type        = string
-  default     = "api_COGNITO_USER_CLIENT_ID"
+  default     = "COGNITO_USER_CLIENT_ID"
 }
 
-variable "api_COGNITO_DOMAIN" {
+variable "COGNITO_DOMAIN" {
   type        = string
-  default     = "api_COGNITO_DOMAIN"
+  default     = "COGNITO_DOMAIN"
 }
 
-variable "api_AUTH_URL" {
+variable "AUTH_URL" {
   type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/oauth2/authorize"
+  default     = "AUTH_URL"
 }
 
-variable "api_TOKEN_URL" {
+variable "TOKEN_URL" {
   type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/oauth2/token"
+  default     = "TOKEN_URL"
 }
 
-variable "api_LOGOUT_URL" {
+variable "LOGOUT_URL" {
   type        = string
-  default     = "https://${var.api_COGNITO_DOMAIN}/logout"
+  default     = "LOGOUT_URL"
+}
+
+variable "MAKERS_URL_API" {
+  type        = string
+  default     = "MAKERS_URL_API"
+}
+
+variable "FRONTEND_SIGN_UP_IDP_LINK" {
+  type = string
+  default = "FRONTEND_SIGN_UP_IDP_LINK"
+}
+
+variable "STRIPE_KEY" {
+  type       = string
+  default    = "STRIPE_KEY"
+}
+
+variable "API_KEY_EMAIL"{
+  type       = string
+  default    = "API_KEY_EMAIL"
+}
+
+variable "VITE_STRIPE_KEY"{
+  type       = string
+  default    = "VITE_STRIPE_KEY"
+}
+
+variable "VITE_GOOGLE_AUTH_URL"{
+  type       = string
+  default    = "VITE_GOOGLE_AUTH_URL"
+}
+
+variable "SSL_CERTIFICATE_ARN" {
+  type        = string
+  default     = "SSL_CERTIFICATE_ARN"
+}
+
+variable "VPC_ID" {
+  type    = string
+  default = "VPC_ID"
+}
+
+variable "PUBLIC_SUBNET_1" {
+  type    = string
+  default = "PUBLIC_SUBNET_1"
+}
+
+variable "PUBLIC_SUBNET_2" {
+  type    = string
+  default = "PUBLIC_SUBNET_2"
 }
 
 // Providers
 provider "aws" {
   region  = var.aws_region
-  profile = "makers3"
+  profile = "makers5"
 }
 
 // CODE
@@ -111,7 +166,7 @@ data "aws_ecr_image" "latest_frontend_image" {
 }
 
 resource "aws_ecs_cluster" "my_cluster" {
-  name = "makers-test-cluster" # Name your cluster here
+  name = "makers-market-cluster" # Name your cluster here
 }
 
 resource "aws_cloudwatch_log_group" "api_log_group" {
@@ -125,7 +180,7 @@ resource "aws_cloudwatch_log_group" "frontend_log_group" {
 }
 
 resource "aws_ecs_task_definition" "api_task" {
-  family                   = "app-first-task"
+  family                   = "api-task"
   container_definitions    = jsonencode([ # Use jsonencode for better readability
     {
       "name": "fastapi-server",
@@ -154,27 +209,27 @@ resource "aws_ecs_task_definition" "api_task" {
         },
         {
           "name": "AWS_URL",
-          "value": "http://${aws_alb.application_load_balancer.dns_name}"
+          "value": "https://makers-market.pt"
         },
         {
         "name": "MYSQL_ROOT_PASSWORD",
-        "value": var.api_MYSQL_ROOT_PASSWORD
+        "value": var.MYSQL_ROOT_PASSWORD
         },
         {
           "name": "MYSQL_DATABASE",
-          "value": var.api_MYSQL_DATABASE
+          "value": var.MYSQL_DATABASE
         },
         {
           "name": "MYSQL_USER",
-          "value": var.api_MYSQL_USER
+          "value": var.MYSQL_USER
         },
         {
           "name": "MYSQL_PASSWORD",
-          "value": var.api_MYSQL_PASSWORD
+          "value": var.MYSQL_PASSWORD
         },
         {
           "name": "MYSQL_HOST",
-          "value": var.api_MYSQL_HOST
+          "value": var.MYSQL_HOST
         },
         {
           "name": "AWS_REGION",
@@ -182,39 +237,55 @@ resource "aws_ecs_task_definition" "api_task" {
         },
         {
           "name": "AWS_ACCESS_KEY_ID",
-          "value": var.api_AWS_ACCESS_KEY_ID
+          "value": var.AWS_ACCESS_KEY_ID
         },
         {
           "name": "AWS_SECRET_ACCESS_KEY",
-          "value": var.api_AWS_SECRET_ACCESS_KEY
+          "value": var.AWS_SECRET_ACCESS_KEY
         },
         {
           "name": "BUCKET_NAME",
-          "value": var.api_BUCKET_NAME
+          "value": var.BUCKET_NAME
         },
         {
           "name": "USER_POOL_ID",
-          "value": var.api_USER_POOL_ID
+          "value": var.USER_POOL_ID
         },
         {
           "name": "COGNITO_USER_CLIENT_ID",
-          "value": var.api_COGNITO_USER_CLIENT_ID
+          "value": var.COGNITO_USER_CLIENT_ID
         },
         {
           "name": "COGNITO_DOMAIN",
-          "value": var.api_COGNITO_DOMAIN
+          "value": var.COGNITO_DOMAIN
         },
         {
           "name": "AUTH_URL",
-          "value": var.api_AUTH_URL
+          "value": var.AUTH_URL
         },
         {
           "name": "TOKEN_URL",
-          "value": var.api_TOKEN_URL
+          "value": var.TOKEN_URL
         },
         {
           "name": "LOGOUT_URL",
-          "value": var.api_LOGOUT_URL
+          "value": var.LOGOUT_URL
+        },
+        {
+          "name": "STRIPE_KEY",
+          "value": var.STRIPE_KEY
+        },
+        {
+          "name": "API_KEY_EMAIL",
+          "value": var.API_KEY_EMAIL
+        },
+        {
+          "name": "MAKERS_URL_API",
+          "value": var.MAKERS_URL_API
+        },
+        {
+          "name": "FRONTEND_SIGN_UP_IDP_LINK",
+          "value": var.FRONTEND_SIGN_UP_IDP_LINK
         }
       ]
     }
@@ -252,7 +323,15 @@ resource "aws_ecs_task_definition" "frontend_task" {
       "environment": [
         {
           "name": "VITE_API_URL",
-          "value": "http://${aws_alb.application_load_balancer.dns_name}/api"
+          "value": "https://makers-market.pt/api"
+        },
+        {
+          "name": "VITE_STRIPE_KEY",
+          "value": var.VITE_STRIPE_KEY
+        },
+        {
+          "name": "VITE_GOOGLE_AUTH_URL",
+          "value": var.VITE_GOOGLE_AUTH_URL
         }
       ]
     }
@@ -285,37 +364,28 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_default_vpc" "default_vpc" {
-}
-
-# Provide references to your default subnets
-resource "aws_default_subnet" "default_subnet_a" {
-  # Use your own region here but reference to subnet 1a
-  availability_zone = "us-east-1a"
-}
-
-resource "aws_default_subnet" "default_subnet_b" {
-  # Use your own region here but reference to subnet 1b
-  availability_zone = "us-east-1b"
-}
-
 resource "aws_alb" "application_load_balancer" {
-  name               = "load-balancer-dev" #load balancer name
+  name               = "load-balancer-prod" #load balancer name
   load_balancer_type = "application"
-  subnets = [ # Referencing the default subnets
-    "${aws_default_subnet.default_subnet_a.id}",
-    "${aws_default_subnet.default_subnet_b.id}"
-  ]
+  subnets            = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
   # security group
   security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
+  vpc_id = var.VPC_ID
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Allow traffic in from all sources
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] // Allow HTTPS traffic from all sources
   }
 
   egress {
@@ -331,11 +401,11 @@ resource "aws_lb_target_group" "api_target_group" {
   port        = 8000 # Update to match FastAPI port
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = aws_default_vpc.default_vpc.id
+  vpc_id = var.VPC_ID
 
   health_check {
     enabled             = true
-    interval            = 30
+    interval            = 120
     path                = "/api/health" # Update the health check path to /api/health
     port                = "traffic-port"
     protocol            = "HTTP"
@@ -351,11 +421,11 @@ resource "aws_lb_target_group" "frontend_target_group" {
   port        = 4173
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = aws_default_vpc.default_vpc.id
+  vpc_id = var.VPC_ID
 
   health_check {
     enabled             = true
-    interval            = 30
+    interval            = 120
     path                = "/" # Adjust if your frontend has a specific health check path
     port                = "traffic-port"
     protocol            = "HTTP"
@@ -371,6 +441,23 @@ resource "aws_lb_listener" "listener" {
   port              = 80
   protocol          = "HTTP"
   default_action {
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_alb.application_load_balancer.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08" # Default policy, adjust as needed
+  certificate_arn   = var.SSL_CERTIFICATE_ARN
+
+  default_action {
     type = "fixed-response"
     fixed_response {
       content_type = "text/plain"
@@ -381,7 +468,7 @@ resource "aws_lb_listener" "listener" {
 }
 
 resource "aws_lb_listener_rule" "api_listener_rule" {
-  listener_arn = aws_lb_listener.listener.arn
+  listener_arn = aws_lb_listener.https_listener.arn
   priority     = 100
 
   action {
@@ -396,9 +483,8 @@ resource "aws_lb_listener_rule" "api_listener_rule" {
   }
 }
 
-
 resource "aws_lb_listener_rule" "frontend_listener_rule" {
-  listener_arn = aws_lb_listener.listener.arn
+  listener_arn = aws_lb_listener.https_listener.arn
   priority     = 200
 
   action {
@@ -427,7 +513,7 @@ resource "aws_ecs_service" "api_service" {
   }
 
   network_configuration {
-    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}"]
+    subnets          = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
     assign_public_ip = true     # Provide the containers with public IPs
     security_groups  = ["${aws_security_group.service_security_group.id}"] # Set up the security group
   }
@@ -447,13 +533,14 @@ resource "aws_ecs_service" "frontend_service" {
   }
 
   network_configuration {
-    subnets          = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
+    subnets          = [var.PUBLIC_SUBNET_1, var.PUBLIC_SUBNET_2]
     assign_public_ip = true
     security_groups  = [aws_security_group.service_security_group.id]
   }
 }
 
 resource "aws_security_group" "service_security_group" {
+  vpc_id = var.VPC_ID
   ingress {
     from_port = 0
     to_port   = 0
@@ -462,12 +549,23 @@ resource "aws_security_group" "service_security_group" {
     security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
   }
 
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    security_groups = [var.MYSQL_SG] # Allow traffic in from all sources
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+output "service_security_group_id" {
+  value = aws_security_group.service_security_group.id
 }
 
 output "app_url" {

@@ -13,13 +13,18 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "vpc_id" {
+  type    = string
+  default = "vpc_id"
+}
+
 provider "aws" {
   region  = var.aws_region
-  profile = "makers3"
+  profile = "makers5"
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "makers-bucket-v3.5"
+  bucket = "makers-bucket-v5.0"
 
   tags = {
     Name = "Makers Bucket"
@@ -27,14 +32,13 @@ resource "aws_s3_bucket" "my_bucket" {
 }
 
 resource "aws_s3_access_point" "my_access_point" {
-  name   = "makers-access-point-v3-5"
+  name   = "makers-access-point-v5"
   bucket = aws_s3_bucket.my_bucket.id
 
   vpc_configuration {
-    vpc_id = "vpc-03c9139ceac689522"
+    vpc_id = var.vpc_id // Correct VPC ID
   }
 }
-
 
 output "bucket_name" {
   value = aws_s3_bucket.my_bucket.bucket
